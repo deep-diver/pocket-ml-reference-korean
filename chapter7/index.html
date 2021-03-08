@@ -1,0 +1,5883 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>7장 데이터 전처리 | 주머니속의 머신러닝</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="7장 데이터 전처리" />
+<meta name="author" content="Chansung Park" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="데이터를 전처리하는 내용을 다룹니다." />
+<meta property="og:description" content="데이터를 전처리하는 내용을 다룹니다." />
+<link rel="canonical" href="https://deep-diver.github.io/pocket-ml-reference-korean/chapter7/" />
+<meta property="og:url" content="https://deep-diver.github.io/pocket-ml-reference-korean/chapter7/" />
+<meta property="og:site_name" content="주머니속의 머신러닝" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-03-07T00:00:00-06:00" />
+<script type="application/ld+json">
+{"url":"https://deep-diver.github.io/pocket-ml-reference-korean/chapter7/","@type":"BlogPosting","headline":"7장 데이터 전처리","dateModified":"2021-03-07T00:00:00-06:00","datePublished":"2021-03-07T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://deep-diver.github.io/pocket-ml-reference-korean/chapter7/"},"author":{"@type":"Person","name":"Chansung Park"},"description":"데이터를 전처리하는 내용을 다룹니다.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/pocket-ml-reference-korean/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://deep-diver.github.io/pocket-ml-reference-korean/feed.xml" title="주머니속의 머신러닝" /><link rel="shortcut icon" type="image/x-icon" href="/pocket-ml-reference-korean/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/pocket-ml-reference-korean/">주머니속의 머신러닝</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/pocket-ml-reference-korean/about/">About Me</a><a class="page-link" href="/pocket-ml-reference-korean/search/">Search</a><a class="page-link" href="/pocket-ml-reference-korean/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">7장 데이터 전처리</h1><p class="page-description">데이터를 전처리하는 내용을 다룹니다.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-03-07T00:00:00-06:00" itemprop="datePublished">
+        Mar 7, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Chansung Park</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      27 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/deep-diver/pocket-ml-reference-korean/tree/master/_notebooks/2021_03_09_ML_Pocket_Chapter7.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/pocket-ml-reference-korean/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/deep-diver/pocket-ml-reference-korean/master?filepath=_notebooks%2F2021_03_09_ML_Pocket_Chapter7.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/pocket-ml-reference-korean/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/deep-diver/pocket-ml-reference-korean/blob/master/_notebooks/2021_03_09_ML_Pocket_Chapter7.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/pocket-ml-reference-korean/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#7.1-표준화">7.1 표준화 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.2-범위-조정">7.2 범위 조정 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.3-더미-변수">7.3 더미 변수 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.4-레이블-인코더">7.4 레이블 인코더 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.5-프리퀀시-인코딩">7.5 프리퀀시 인코딩 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.6-문자열에서-범주-가져오기">7.6 문자열에서 범주 가져오기 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.7-그-밖의-범주형-인코딩">7.7 그 밖의 범주형 인코딩 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.8-날짜형-데이터의-특징-공학">7.8 날짜형 데이터의 특징 공학 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.9-col_na-특징의-추가">7.9 col_na 특징의 추가 </a></li>
+<li class="toc-entry toc-h1"><a href="#7.10-수동적-특징-공학">7.10 수동적 특징 공학 </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021_03_09_ML_Pocket_Chapter7.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+  <span class="p">{</span>
+    <span class="s2">"a"</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s2">"b"</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">1000</span><span class="p">],</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+<span class="n">X2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>a</th>
+      <th>b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>-100</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>-50</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>1000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.1-표준화">
+<a class="anchor" href="#7.1-%ED%91%9C%EC%A4%80%ED%99%94" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.1 표준화<a class="anchor-link" href="#7.1-%ED%91%9C%EC%A4%80%ED%99%94"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="n">std</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">std</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[-1.41421356, -0.75995002],
+       [-0.70710678, -0.63737744],
+       [ 0.        , -0.51480485],
+       [ 0.70710678, -0.02451452],
+       [ 1.41421356,  1.93664683]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">std</span><span class="o">.</span><span class="n">scale_</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([  1.41421356, 407.92156109])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">std</span><span class="o">.</span><span class="n">mean_</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([  2., 210.])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">std</span><span class="o">.</span><span class="n">var_</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([2.000e+00, 1.664e+05])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_std</span> <span class="o">=</span> <span class="p">(</span><span class="n">X2</span> <span class="o">-</span> <span class="n">X2</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">X2</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+<span class="n">X_std</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>a</th>
+      <th>b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>-1.264911</td>
+      <td>-0.679720</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.632456</td>
+      <td>-0.570088</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.000000</td>
+      <td>-0.460455</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.632456</td>
+      <td>-0.021926</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.264911</td>
+      <td>1.732190</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_std</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>a    4.440892e-17
+b    0.000000e+00
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_std</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>a    1.0
+b    1.0
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X3</span> <span class="o">=</span> <span class="n">X2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">scale_vars</span><span class="p">(</span><span class="n">X3</span><span class="p">,</span> <span class="n">mapper</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="c1">#fastai function locally imported</span>
+<span class="n">X3</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>a    1.118034
+b    1.118034
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X3</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>a    0.000000e+00
+b    4.440892e-17
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.2-범위-조정">
+<a class="anchor" href="#7.2-%EB%B2%94%EC%9C%84-%EC%A1%B0%EC%A0%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.2 범위 조정<a class="anchor-link" href="#7.2-%EB%B2%94%EC%9C%84-%EC%A1%B0%EC%A0%95"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="n">mms</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">MinMaxScaler</span><span class="p">()</span>
+<span class="n">mms</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>
+<span class="n">mms</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[0.        , 0.        ],
+       [0.25      , 0.04545455],
+       [0.5       , 0.09090909],
+       [0.75      , 0.27272727],
+       [1.        , 1.        ]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">X2</span> <span class="o">-</span> <span class="n">X2</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="n">X2</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">X2</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>a</th>
+      <th>b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.00</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.25</td>
+      <td>0.045455</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.50</td>
+      <td>0.090909</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.75</td>
+      <td>0.272727</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.00</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.3-더미-변수">
+<a class="anchor" href="#7.3-%EB%8D%94%EB%AF%B8-%EB%B3%80%EC%88%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.3 더미 변수<a class="anchor-link" href="#7.3-%EB%8D%94%EB%AF%B8-%EB%B3%80%EC%88%98"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_cat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+  <span class="p">{</span>
+    <span class="s2">"name"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"George"</span><span class="p">,</span> <span class="s2">"Paul"</span><span class="p">],</span>
+    <span class="s2">"inst"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Bass"</span><span class="p">,</span> <span class="s2">"Guitar"</span><span class="p">],</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">X_cat</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>inst</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>George</td>
+      <td>Bass</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Paul</td>
+      <td>Guitar</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">X_cat</span><span class="p">,</span> <span class="n">drop_first</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name_Paul</th>
+      <th>inst_Guitar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
+
+<span class="n">X_cat2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+  <span class="p">{</span>
+    <span class="s2">"A"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="s2">"names"</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">"Fred,George"</span><span class="p">,</span>
+        <span class="s2">"George"</span><span class="p">,</span>
+        <span class="s2">"John,Paul"</span><span class="p">,</span>
+      <span class="p">],</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">jn</span><span class="o">.</span><span class="n">expand_column</span><span class="p">(</span><span class="n">X_cat2</span><span class="p">,</span> <span class="s2">"names"</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>names</th>
+      <th>Fred</th>
+      <th>George</th>
+      <th>John</th>
+      <th>Paul</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.0</td>
+      <td>Fred,George</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>George</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3.0</td>
+      <td>John,Paul</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.4-레이블-인코더">
+<a class="anchor" href="#7.4-%EB%A0%88%EC%9D%B4%EB%B8%94-%EC%9D%B8%EC%BD%94%EB%8D%94" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.4 레이블 인코더<a class="anchor-link" href="#7.4-%EB%A0%88%EC%9D%B4%EB%B8%94-%EC%9D%B8%EC%BD%94%EB%8D%94"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
+<span class="n">lab</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">LabelEncoder</span><span class="p">()</span>
+<span class="n">lab</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_cat</span><span class="p">[</span><span class="s1">'inst'</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([0, 1])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lab</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array(['Guitar', 'Guitar', 'Bass'], dtype=object)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_cat</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+  <span class="s2">"category"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">as_ordered</span><span class="p">()</span><span class="o">.</span><span class="n">cat</span><span class="o">.</span><span class="n">codes</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    1
+1    2
+dtype: int8</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.5-프리퀀시-인코딩">
+<a class="anchor" href="#7.5-%ED%94%84%EB%A6%AC%ED%80%80%EC%8B%9C-%EC%9D%B8%EC%BD%94%EB%94%A9" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.5 프리퀀시 인코딩<a class="anchor-link" href="#7.5-%ED%94%84%EB%A6%AC%ED%80%80%EC%8B%9C-%EC%9D%B8%EC%BD%94%EB%94%A9"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="n">X_cat</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">X_cat</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    1
+1    1
+Name: name, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.6-문자열에서-범주-가져오기">
+<a class="anchor" href="#7.6-%EB%AC%B8%EC%9E%90%EC%97%B4%EC%97%90%EC%84%9C-%EB%B2%94%EC%A3%BC-%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.6 문자열에서 범주 가져오기<a class="anchor-link" href="#7.6-%EB%AC%B8%EC%9E%90%EC%97%B4%EC%97%90%EC%84%9C-%EB%B2%94%EC%A3%BC-%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pclass</th>
+      <th>survived</th>
+      <th>name</th>
+      <th>sex</th>
+      <th>age</th>
+      <th>sibsp</th>
+      <th>parch</th>
+      <th>ticket</th>
+      <th>fare</th>
+      <th>cabin</th>
+      <th>embarked</th>
+      <th>boat</th>
+      <th>body</th>
+      <th>home.dest</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Allen, Miss. Elisabeth Walton</td>
+      <td>female</td>
+      <td>29.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>24160</td>
+      <td>211.3375</td>
+      <td>B5</td>
+      <td>S</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>St Louis, MO</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Allison, Master. Hudson Trevor</td>
+      <td>male</td>
+      <td>0.9167</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>11</td>
+      <td>NaN</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Allison, Miss. Helen Loraine</td>
+      <td>female</td>
+      <td>2.0000</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Allison, Mr. Hudson Joshua Creighton</td>
+      <td>male</td>
+      <td>30.0000</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>135.0</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Allison, Mrs. Hudson J C (Bessie Waldo Daniels)</td>
+      <td>female</td>
+      <td>25.0000</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Anderson, Mr. Harry</td>
+      <td>male</td>
+      <td>48.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>19952</td>
+      <td>26.5500</td>
+      <td>E12</td>
+      <td>S</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Andrews, Miss. Kornelia Theodosia</td>
+      <td>female</td>
+      <td>63.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>13502</td>
+      <td>77.9583</td>
+      <td>D7</td>
+      <td>S</td>
+      <td>10</td>
+      <td>NaN</td>
+      <td>Hudson, NY</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Andrews, Mr. Thomas Jr</td>
+      <td>male</td>
+      <td>39.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>112050</td>
+      <td>0.0000</td>
+      <td>A36</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Belfast, NI</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Appleton, Mrs. Edward Dale (Charlotte Lamson)</td>
+      <td>female</td>
+      <td>53.0000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>11769</td>
+      <td>51.4792</td>
+      <td>C101</td>
+      <td>S</td>
+      <td>D</td>
+      <td>NaN</td>
+      <td>Bayside, Queens, NY</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Artagaveytia, Mr. Ramon</td>
+      <td>male</td>
+      <td>71.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17609</td>
+      <td>49.5042</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>22.0</td>
+      <td>Montevideo, Uruguay</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Astor, Col. John Jacob</td>
+      <td>male</td>
+      <td>47.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17757</td>
+      <td>227.5250</td>
+      <td>C62 C64</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>124.0</td>
+      <td>New York, NY</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Astor, Mrs. John Jacob (Madeleine Talmadge Force)</td>
+      <td>female</td>
+      <td>18.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17757</td>
+      <td>227.5250</td>
+      <td>C62 C64</td>
+      <td>C</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Aubart, Mme. Leontine Pauline</td>
+      <td>female</td>
+      <td>24.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17477</td>
+      <td>69.3000</td>
+      <td>B35</td>
+      <td>C</td>
+      <td>9</td>
+      <td>NaN</td>
+      <td>Paris, France</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Barber, Miss. Ellen "Nellie"</td>
+      <td>female</td>
+      <td>26.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>19877</td>
+      <td>78.8500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>6</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Barkworth, Mr. Algernon Henry Wilson</td>
+      <td>male</td>
+      <td>80.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>27042</td>
+      <td>30.0000</td>
+      <td>A23</td>
+      <td>S</td>
+      <td>B</td>
+      <td>NaN</td>
+      <td>Hessle, Yorks</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Baumann, Mr. John D</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17318</td>
+      <td>25.9250</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Baxter, Mr. Quigg Edmond</td>
+      <td>male</td>
+      <td>24.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>PC 17558</td>
+      <td>247.5208</td>
+      <td>B58 B60</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Montreal, PQ</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Baxter, Mrs. James (Helene DeLaudeniere Chaput)</td>
+      <td>female</td>
+      <td>50.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>PC 17558</td>
+      <td>247.5208</td>
+      <td>B58 B60</td>
+      <td>C</td>
+      <td>6</td>
+      <td>NaN</td>
+      <td>Montreal, PQ</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bazzani, Miss. Albina</td>
+      <td>female</td>
+      <td>32.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>11813</td>
+      <td>76.2917</td>
+      <td>D15</td>
+      <td>C</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Beattie, Mr. Thomson</td>
+      <td>male</td>
+      <td>36.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13050</td>
+      <td>75.2417</td>
+      <td>C6</td>
+      <td>C</td>
+      <td>A</td>
+      <td>NaN</td>
+      <td>Winnipeg, MN</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Beckwith, Mr. Richard Leonard</td>
+      <td>male</td>
+      <td>37.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>11751</td>
+      <td>52.5542</td>
+      <td>D35</td>
+      <td>S</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Beckwith, Mrs. Richard Leonard (Sallie Monypeny)</td>
+      <td>female</td>
+      <td>47.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>11751</td>
+      <td>52.5542</td>
+      <td>D35</td>
+      <td>S</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Behr, Mr. Karl Howell</td>
+      <td>male</td>
+      <td>26.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>111369</td>
+      <td>30.0000</td>
+      <td>C148</td>
+      <td>C</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bidois, Miss. Rosalie</td>
+      <td>female</td>
+      <td>42.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17757</td>
+      <td>227.5250</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bird, Miss. Ellen</td>
+      <td>female</td>
+      <td>29.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17483</td>
+      <td>221.7792</td>
+      <td>C97</td>
+      <td>S</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Birnbaum, Mr. Jakob</td>
+      <td>male</td>
+      <td>25.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13905</td>
+      <td>26.0000</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>148.0</td>
+      <td>San Francisco, CA</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bishop, Mr. Dickinson H</td>
+      <td>male</td>
+      <td>25.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>11967</td>
+      <td>91.0792</td>
+      <td>B49</td>
+      <td>C</td>
+      <td>7</td>
+      <td>NaN</td>
+      <td>Dowagiac, MI</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bishop, Mrs. Dickinson H (Helen Walton)</td>
+      <td>female</td>
+      <td>19.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>11967</td>
+      <td>91.0792</td>
+      <td>B49</td>
+      <td>C</td>
+      <td>7</td>
+      <td>NaN</td>
+      <td>Dowagiac, MI</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bissette, Miss. Amelia</td>
+      <td>female</td>
+      <td>35.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17760</td>
+      <td>135.6333</td>
+      <td>C99</td>
+      <td>S</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bjornstrom-Steffansson, Mr. Mauritz Hakan</td>
+      <td>male</td>
+      <td>28.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>110564</td>
+      <td>26.5500</td>
+      <td>C52</td>
+      <td>S</td>
+      <td>D</td>
+      <td>NaN</td>
+      <td>Stockholm, Sweden / Washington, DC</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1279</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Vestrom, Miss. Hulda Amanda Adolfina</td>
+      <td>female</td>
+      <td>14.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>350406</td>
+      <td>7.8542</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1280</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Vovk, Mr. Janko</td>
+      <td>male</td>
+      <td>22.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>349252</td>
+      <td>7.8958</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1281</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Waelens, Mr. Achille</td>
+      <td>male</td>
+      <td>22.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>345767</td>
+      <td>9.0000</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Antwerp, Belgium / Stanton, OH</td>
+    </tr>
+    <tr>
+      <th>1282</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Ware, Mr. Frederick</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>359309</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1283</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Warren, Mr. Charles William</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>C.A. 49867</td>
+      <td>7.5500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1284</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Webber, Mr. James</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SOTON/OQ 3101316</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1285</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Wenzel, Mr. Linhart</td>
+      <td>male</td>
+      <td>32.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>345775</td>
+      <td>9.5000</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>298.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1286</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Whabee, Mrs. George Joseph (Shawneene Abi-Saab)</td>
+      <td>female</td>
+      <td>38.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2688</td>
+      <td>7.2292</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1287</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Widegren, Mr. Carl/Charles Peter</td>
+      <td>male</td>
+      <td>51.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>347064</td>
+      <td>7.7500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1288</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Wiklund, Mr. Jakob Alfred</td>
+      <td>male</td>
+      <td>18.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3101267</td>
+      <td>6.4958</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>314.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1289</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Wiklund, Mr. Karl Johan</td>
+      <td>male</td>
+      <td>21.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3101266</td>
+      <td>6.4958</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1290</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Wilkes, Mrs. James (Ellen Needs)</td>
+      <td>female</td>
+      <td>47.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>363272</td>
+      <td>7.0000</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1291</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Willer, Mr. Aaron ("Abi Weller")</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3410</td>
+      <td>8.7125</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1292</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Willey, Mr. Edward</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>S.O./P.P. 751</td>
+      <td>7.5500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1293</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Williams, Mr. Howard Hugh "Harry"</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>A/5 2466</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1294</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Williams, Mr. Leslie</td>
+      <td>male</td>
+      <td>28.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>54636</td>
+      <td>16.1000</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>14.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1295</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Windelov, Mr. Einar</td>
+      <td>male</td>
+      <td>21.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SOTON/OQ 3101317</td>
+      <td>7.2500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1296</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Wirz, Mr. Albert</td>
+      <td>male</td>
+      <td>27.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>315154</td>
+      <td>8.6625</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>131.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1297</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Wiseman, Mr. Phillippe</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>A/4. 34244</td>
+      <td>7.2500</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1298</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Wittevrongel, Mr. Camille</td>
+      <td>male</td>
+      <td>36.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>345771</td>
+      <td>9.5000</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1299</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Yasbeck, Mr. Antoni</td>
+      <td>male</td>
+      <td>27.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2659</td>
+      <td>14.4542</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1300</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Yasbeck, Mrs. Antoni (Selini Alexander)</td>
+      <td>female</td>
+      <td>15.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2659</td>
+      <td>14.4542</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1301</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Youseff, Mr. Gerious</td>
+      <td>male</td>
+      <td>45.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2628</td>
+      <td>7.2250</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>312.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1302</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Yousif, Mr. Wazli</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2647</td>
+      <td>7.2250</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1303</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Yousseff, Mr. Gerious</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2627</td>
+      <td>14.4583</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1304</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Zabour, Miss. Hileni</td>
+      <td>female</td>
+      <td>14.5000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2665</td>
+      <td>14.4542</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>328.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1305</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Zabour, Miss. Thamine</td>
+      <td>female</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2665</td>
+      <td>14.4542</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1306</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Zakarian, Mr. Mapriededer</td>
+      <td>male</td>
+      <td>26.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2656</td>
+      <td>7.2250</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>304.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1307</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Zakarian, Mr. Ortin</td>
+      <td>male</td>
+      <td>27.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2670</td>
+      <td>7.2250</td>
+      <td>NaN</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1308</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Zimmerman, Mr. Leo</td>
+      <td>male</td>
+      <td>29.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>315082</td>
+      <td>7.8750</td>
+      <td>NaN</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>1309 rows × 14 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">triples</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)):</span>
+    <span class="n">c</span><span class="p">[</span><span class="n">val</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">triples</span><span class="p">)</span>
+<span class="n">c</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(', M', 1282),
+ (' Mr', 954),
+ ('r. ', 830),
+ ('Mr.', 757),
+ ('s. ', 460),
+ ('n, ', 320),
+ (' Mi', 283),
+ ('iss', 261),
+ ('ss.', 261),
+ ('Mis', 260)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+  <span class="s2">"([A-Za-z]+)\."</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0      Miss
+1    Master
+2      Miss
+3        Mr
+4       Mrs
+Name: name, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+  <span class="s2">"([A-Za-z]+)\."</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Mr          757
+Miss        260
+Mrs         197
+Master       61
+Dr            8
+Rev           8
+Col           4
+Ms            2
+Mlle          2
+Major         2
+Mme           1
+Dona          1
+Don           1
+Countess      1
+Sir           1
+Lady          1
+Jonkheer      1
+Capt          1
+Name: name, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.7-그-밖의-범주형-인코딩">
+<a class="anchor" href="#7.7-%EA%B7%B8-%EB%B0%96%EC%9D%98-%EB%B2%94%EC%A3%BC%ED%98%95-%EC%9D%B8%EC%BD%94%EB%94%A9" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.7 그 밖의 범주형 인코딩<a class="anchor-link" href="#7.7-%EA%B7%B8-%EB%B0%96%EC%9D%98-%EB%B2%94%EC%A3%BC%ED%98%95-%EC%9D%B8%EC%BD%94%EB%94%A9"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">category_encoders</span> <span class="k">as</span> <span class="nn">ce</span>
+<span class="n">he</span> <span class="o">=</span> <span class="n">ce</span><span class="o">.</span><span class="n">HashingEncoder</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">he</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_cat</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>col_0</th>
+      <th>col_1</th>
+      <th>col_2</th>
+      <th>col_3</th>
+      <th>col_4</th>
+      <th>col_5</th>
+      <th>col_6</th>
+      <th>col_7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">size_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+  <span class="p">{</span>
+    <span class="s2">"name"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Fred"</span><span class="p">,</span> <span class="s2">"John"</span><span class="p">,</span> <span class="s2">"Matt"</span><span class="p">],</span>
+    <span class="s2">"size"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"small"</span><span class="p">,</span> <span class="s2">"med"</span><span class="p">,</span> <span class="s2">"xxl"</span><span class="p">],</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">ore</span> <span class="o">=</span> <span class="n">ce</span><span class="o">.</span><span class="n">OrdinalEncoder</span><span class="p">(</span>
+  <span class="n">mapping</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">"col"</span><span class="p">:</span> <span class="s2">"size"</span><span class="p">,</span>
+      <span class="s2">"mapping"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">"small"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s2">"med"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"lg"</span><span class="p">:</span> <span class="mi">3</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">ore</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">size_df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Fred</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>John</td>
+      <td>2.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Matt</td>
+      <td>-1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_title</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"([A-Za-z]+)\."</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">False</span>
+  <span class="p">)</span>
+
+<span class="n">te</span> <span class="o">=</span> <span class="n">ce</span><span class="o">.</span><span class="n">TargetEncoder</span><span class="p">(</span><span class="n">cols</span><span class="o">=</span><span class="s2">"Title"</span><span class="p">)</span>
+<span class="n">te</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Title</span><span class="o">=</span><span class="n">get_title</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">survived</span><span class="p">)[</span><span class="s2">"Title"</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    0.676923
+1    0.508197
+2    0.676923
+3    0.162483
+4    0.786802
+Name: Title, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.8-날짜형-데이터의-특징-공학">
+<a class="anchor" href="#7.8-%EB%82%A0%EC%A7%9C%ED%98%95-%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%9D%98-%ED%8A%B9%EC%A7%95-%EA%B3%B5%ED%95%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.8 날짜형 데이터의 특징 공학<a class="anchor-link" href="#7.8-%EB%82%A0%EC%A7%9C%ED%98%95-%EB%8D%B0%EC%9D%B4%ED%84%B0%EC%9D%98-%ED%8A%B9%EC%A7%95-%EA%B3%B5%ED%95%99"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+  <span class="p">{</span>
+    <span class="s2">"A"</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+      <span class="p">[</span><span class="s2">"9/17/2001"</span><span class="p">,</span> <span class="s2">"Jan 1, 2002"</span><span class="p">]</span>
+    <span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">add_datepart</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">)</span>
+<span class="n">dates</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AYear</th>
+      <td>2001</td>
+      <td>2002</td>
+    </tr>
+    <tr>
+      <th>AMonth</th>
+      <td>9</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>AWeek</th>
+      <td>38</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>ADay</th>
+      <td>17</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>ADayofweek</th>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>ADayofyear</th>
+      <td>260</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>AIs_month_end</th>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>AIs_month_start</th>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AIs_quarter_end</th>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>AIs_quarter_start</th>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AIs_year_end</th>
+      <td>False</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>AIs_year_start</th>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>AElapsed</th>
+      <td>1000684800</td>
+      <td>1009843200</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.9-col_na-특징의-추가">
+<a class="anchor" href="#7.9-col_na-%ED%8A%B9%EC%A7%95%EC%9D%98-%EC%B6%94%EA%B0%80" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.9 col_na 특징의 추가<a class="anchor-link" href="#7.9-col_na-%ED%8A%B9%EC%A7%95%EC%9D%98-%EC%B6%94%EA%B0%80"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
+<span class="k">def</span> <span class="nf">fix_missing</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">na_dict</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">is_numeric_dtype</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="ow">or</span> <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">na_dict</span><span class="p">):</span>
+      <span class="n">df</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_na"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+
+      <span class="n">filler</span> <span class="o">=</span> <span class="p">(</span>
+          <span class="n">na_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+          <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">na_dict</span>
+          <span class="k">else</span> <span class="n">col</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+      <span class="p">)</span>
+
+      <span class="n">df</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">filler</span><span class="p">)</span>
+      <span class="n">na_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">filler</span>
+      <span class="k">return</span> <span class="n">na_dict</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"A"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">]})</span>
+<span class="n">fix_missing</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">,</span> <span class="p">{})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'A': 5.0}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
+
+<span class="k">def</span> <span class="nf">fix_missing</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">na_dict</span><span class="p">):</span>
+  <span class="k">if</span> <span class="n">is_numeric_dtype</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="ow">or</span> <span class="p">(</span><span class="n">name</span> <span class="ow">in</span> <span class="n">na_dict</span><span class="p">):</span>
+      <span class="n">df</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_na"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">col</span><span class="p">)</span>
+      
+      <span class="n">filler</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">na_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">na_dict</span>
+        <span class="k">else</span> <span class="n">col</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+      <span class="p">)</span>
+
+      <span class="n">df</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">col</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">filler</span><span class="p">)</span>
+      <span class="n">na_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">filler</span>
+      <span class="k">return</span> <span class="n">na_dict</span>
+      
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"A"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">]})</span>
+<span class="n">fix_missing</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="s2">"A"</span><span class="p">,</span> <span class="p">{})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'A': 5.0}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>A_na</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5.0</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5.0</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>100.0</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"A"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">]})</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"A_na"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">"A"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">median</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="7.10-수동적-특징-공학">
+<a class="anchor" href="#7.10-%EC%88%98%EB%8F%99%EC%A0%81-%ED%8A%B9%EC%A7%95-%EA%B3%B5%ED%95%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>7.10 수동적 특징 공학<a class="anchor-link" href="#7.10-%EC%88%98%EB%8F%99%EC%A0%81-%ED%8A%B9%EC%A7%95-%EA%B3%B5%ED%95%99"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">agg</span> <span class="o">=</span> <span class="p">(</span>
+  <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"cabin"</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="s2">"min,max,mean,sum"</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">))</span>
+  <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
+
+<span class="n">agg</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s2">"_"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+  <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">agg</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
+<span class="p">]</span>
+
+<span class="n">agg_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">agg</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"cabin"</span><span class="p">)</span>
+<span class="n">agg_df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pclass</th>
+      <th>survived</th>
+      <th>name</th>
+      <th>sex</th>
+      <th>age</th>
+      <th>sibsp</th>
+      <th>parch</th>
+      <th>ticket</th>
+      <th>fare</th>
+      <th>cabin</th>
+      <th>embarked</th>
+      <th>boat</th>
+      <th>body</th>
+      <th>home.dest</th>
+      <th>pclass_min</th>
+      <th>pclass_max</th>
+      <th>pclass_mean</th>
+      <th>pclass_sum</th>
+      <th>survived_min</th>
+      <th>survived_max</th>
+      <th>survived_mean</th>
+      <th>survived_sum</th>
+      <th>age_min</th>
+      <th>age_max</th>
+      <th>age_mean</th>
+      <th>age_sum</th>
+      <th>sibsp_min</th>
+      <th>sibsp_max</th>
+      <th>sibsp_mean</th>
+      <th>sibsp_sum</th>
+      <th>parch_min</th>
+      <th>parch_max</th>
+      <th>parch_mean</th>
+      <th>parch_sum</th>
+      <th>fare_min</th>
+      <th>fare_max</th>
+      <th>fare_mean</th>
+      <th>fare_sum</th>
+      <th>body_min</th>
+      <th>body_max</th>
+      <th>body_mean</th>
+      <th>body_sum</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Allen, Miss. Elisabeth Walton</td>
+      <td>female</td>
+      <td>29.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>24160</td>
+      <td>211.3375</td>
+      <td>B5</td>
+      <td>S</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>St Louis, MO</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>15.0000</td>
+      <td>29.0</td>
+      <td>22.000000</td>
+      <td>44.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>1</td>
+      <td>211.3375</td>
+      <td>211.3375</td>
+      <td>211.337500</td>
+      <td>422.6750</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Madill, Miss. Georgette Alexandra</td>
+      <td>female</td>
+      <td>15.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>24160</td>
+      <td>211.3375</td>
+      <td>B5</td>
+      <td>S</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>St Louis, MO</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>15.0000</td>
+      <td>29.0</td>
+      <td>22.000000</td>
+      <td>44.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.5</td>
+      <td>1</td>
+      <td>211.3375</td>
+      <td>211.3375</td>
+      <td>211.337500</td>
+      <td>422.6750</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Allison, Master. Hudson Trevor</td>
+      <td>male</td>
+      <td>0.9167</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>11</td>
+      <td>NaN</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.250000</td>
+      <td>1</td>
+      <td>0.9167</td>
+      <td>30.0</td>
+      <td>14.479175</td>
+      <td>57.9167</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>8</td>
+      <td>151.5500</td>
+      <td>151.5500</td>
+      <td>151.550000</td>
+      <td>606.2000</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Allison, Miss. Helen Loraine</td>
+      <td>female</td>
+      <td>2.0000</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.250000</td>
+      <td>1</td>
+      <td>0.9167</td>
+      <td>30.0</td>
+      <td>14.479175</td>
+      <td>57.9167</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>8</td>
+      <td>151.5500</td>
+      <td>151.5500</td>
+      <td>151.550000</td>
+      <td>606.2000</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Allison, Mr. Hudson Joshua Creighton</td>
+      <td>male</td>
+      <td>30.0000</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>135.0</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.250000</td>
+      <td>1</td>
+      <td>0.9167</td>
+      <td>30.0</td>
+      <td>14.479175</td>
+      <td>57.9167</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>8</td>
+      <td>151.5500</td>
+      <td>151.5500</td>
+      <td>151.550000</td>
+      <td>606.2000</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Allison, Mrs. Hudson J C (Bessie Waldo Daniels)</td>
+      <td>female</td>
+      <td>25.0000</td>
+      <td>1</td>
+      <td>2</td>
+      <td>113781</td>
+      <td>151.5500</td>
+      <td>C22 C26</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Montreal, PQ / Chesterville, ON</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.250000</td>
+      <td>1</td>
+      <td>0.9167</td>
+      <td>30.0</td>
+      <td>14.479175</td>
+      <td>57.9167</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2.0</td>
+      <td>8</td>
+      <td>151.5500</td>
+      <td>151.5500</td>
+      <td>151.550000</td>
+      <td>606.2000</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+      <td>135.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Anderson, Mr. Harry</td>
+      <td>male</td>
+      <td>48.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>19952</td>
+      <td>26.5500</td>
+      <td>E12</td>
+      <td>S</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>48.0000</td>
+      <td>48.0</td>
+      <td>48.000000</td>
+      <td>48.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>26.5500</td>
+      <td>26.5500</td>
+      <td>26.550000</td>
+      <td>26.5500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Andrews, Miss. Kornelia Theodosia</td>
+      <td>female</td>
+      <td>63.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>13502</td>
+      <td>77.9583</td>
+      <td>D7</td>
+      <td>S</td>
+      <td>10</td>
+      <td>NaN</td>
+      <td>Hudson, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>63.0000</td>
+      <td>63.0</td>
+      <td>63.000000</td>
+      <td>63.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>77.9583</td>
+      <td>77.9583</td>
+      <td>77.958300</td>
+      <td>77.9583</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Andrews, Mr. Thomas Jr</td>
+      <td>male</td>
+      <td>39.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>112050</td>
+      <td>0.0000</td>
+      <td>A36</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Belfast, NI</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>39.0000</td>
+      <td>39.0</td>
+      <td>39.000000</td>
+      <td>39.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0.0000</td>
+      <td>0.0000</td>
+      <td>0.000000</td>
+      <td>0.0000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Appleton, Mrs. Edward Dale (Charlotte Lamson)</td>
+      <td>female</td>
+      <td>53.0000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>11769</td>
+      <td>51.4792</td>
+      <td>C101</td>
+      <td>S</td>
+      <td>D</td>
+      <td>NaN</td>
+      <td>Bayside, Queens, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>3</td>
+      <td>53.0000</td>
+      <td>59.0</td>
+      <td>55.666667</td>
+      <td>167.0000</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2.000000</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>25.7000</td>
+      <td>51.4792</td>
+      <td>42.886133</td>
+      <td>128.6584</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Brown, Mrs. John Murray (Caroline Lane Lamson)</td>
+      <td>female</td>
+      <td>59.0000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>11769</td>
+      <td>51.4792</td>
+      <td>C101</td>
+      <td>S</td>
+      <td>D</td>
+      <td>NaN</td>
+      <td>Belmont, MA</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>3</td>
+      <td>53.0000</td>
+      <td>59.0</td>
+      <td>55.666667</td>
+      <td>167.0000</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2.000000</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>25.7000</td>
+      <td>51.4792</td>
+      <td>42.886133</td>
+      <td>128.6584</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Cornell, Mrs. Robert Clifford (Malvina Helen L...</td>
+      <td>female</td>
+      <td>55.0000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>11770</td>
+      <td>25.7000</td>
+      <td>C101</td>
+      <td>S</td>
+      <td>2</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>3</td>
+      <td>53.0000</td>
+      <td>59.0</td>
+      <td>55.666667</td>
+      <td>167.0000</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2.000000</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>25.7000</td>
+      <td>51.4792</td>
+      <td>42.886133</td>
+      <td>128.6584</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Astor, Col. John Jacob</td>
+      <td>male</td>
+      <td>47.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17757</td>
+      <td>227.5250</td>
+      <td>C62 C64</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>124.0</td>
+      <td>New York, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>1</td>
+      <td>18.0000</td>
+      <td>47.0</td>
+      <td>32.500000</td>
+      <td>65.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>227.5250</td>
+      <td>227.5250</td>
+      <td>227.525000</td>
+      <td>455.0500</td>
+      <td>124.0</td>
+      <td>124.0</td>
+      <td>124.0</td>
+      <td>124.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Astor, Mrs. John Jacob (Madeleine Talmadge Force)</td>
+      <td>female</td>
+      <td>18.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17757</td>
+      <td>227.5250</td>
+      <td>C62 C64</td>
+      <td>C</td>
+      <td>4</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>1</td>
+      <td>18.0000</td>
+      <td>47.0</td>
+      <td>32.500000</td>
+      <td>65.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>227.5250</td>
+      <td>227.5250</td>
+      <td>227.525000</td>
+      <td>455.0500</td>
+      <td>124.0</td>
+      <td>124.0</td>
+      <td>124.0</td>
+      <td>124.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Aubart, Mme. Leontine Pauline</td>
+      <td>female</td>
+      <td>24.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17477</td>
+      <td>69.3000</td>
+      <td>B35</td>
+      <td>C</td>
+      <td>9</td>
+      <td>NaN</td>
+      <td>Paris, France</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>24.0000</td>
+      <td>24.0</td>
+      <td>24.000000</td>
+      <td>48.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>69.3000</td>
+      <td>69.3000</td>
+      <td>69.300000</td>
+      <td>138.6000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Sagesser, Mlle. Emma</td>
+      <td>female</td>
+      <td>24.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17477</td>
+      <td>69.3000</td>
+      <td>B35</td>
+      <td>C</td>
+      <td>9</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>24.0000</td>
+      <td>24.0</td>
+      <td>24.000000</td>
+      <td>48.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>69.3000</td>
+      <td>69.3000</td>
+      <td>69.300000</td>
+      <td>138.6000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Barkworth, Mr. Algernon Henry Wilson</td>
+      <td>male</td>
+      <td>80.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>27042</td>
+      <td>30.0000</td>
+      <td>A23</td>
+      <td>S</td>
+      <td>B</td>
+      <td>NaN</td>
+      <td>Hessle, Yorks</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>80.0000</td>
+      <td>80.0</td>
+      <td>80.000000</td>
+      <td>80.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>30.0000</td>
+      <td>30.0000</td>
+      <td>30.000000</td>
+      <td>30.0000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Baxter, Mr. Quigg Edmond</td>
+      <td>male</td>
+      <td>24.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>PC 17558</td>
+      <td>247.5208</td>
+      <td>B58 B60</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Montreal, PQ</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.666667</td>
+      <td>2</td>
+      <td>24.0000</td>
+      <td>50.0</td>
+      <td>33.666667</td>
+      <td>101.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.333333</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>247.5208</td>
+      <td>247.5208</td>
+      <td>247.520800</td>
+      <td>742.5624</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Baxter, Mrs. James (Helene DeLaudeniere Chaput)</td>
+      <td>female</td>
+      <td>50.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>PC 17558</td>
+      <td>247.5208</td>
+      <td>B58 B60</td>
+      <td>C</td>
+      <td>6</td>
+      <td>NaN</td>
+      <td>Montreal, PQ</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.666667</td>
+      <td>2</td>
+      <td>24.0000</td>
+      <td>50.0</td>
+      <td>33.666667</td>
+      <td>101.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.333333</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>247.5208</td>
+      <td>247.5208</td>
+      <td>247.520800</td>
+      <td>742.5624</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Douglas, Mrs. Frederick Charles (Mary Helene B...</td>
+      <td>female</td>
+      <td>27.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>PC 17558</td>
+      <td>247.5208</td>
+      <td>B58 B60</td>
+      <td>C</td>
+      <td>6</td>
+      <td>NaN</td>
+      <td>Montreal, PQ</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.666667</td>
+      <td>2</td>
+      <td>24.0000</td>
+      <td>50.0</td>
+      <td>33.666667</td>
+      <td>101.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.333333</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>3</td>
+      <td>247.5208</td>
+      <td>247.5208</td>
+      <td>247.520800</td>
+      <td>742.5624</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bazzani, Miss. Albina</td>
+      <td>female</td>
+      <td>32.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>11813</td>
+      <td>76.2917</td>
+      <td>D15</td>
+      <td>C</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>32.0000</td>
+      <td>60.0</td>
+      <td>46.000000</td>
+      <td>92.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>76.2917</td>
+      <td>76.2917</td>
+      <td>76.291700</td>
+      <td>152.5834</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bucknell, Mrs. William Robert (Emma Eliza Ward)</td>
+      <td>female</td>
+      <td>60.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>11813</td>
+      <td>76.2917</td>
+      <td>D15</td>
+      <td>C</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>Philadelphia, PA</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>32.0000</td>
+      <td>60.0</td>
+      <td>46.000000</td>
+      <td>92.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>76.2917</td>
+      <td>76.2917</td>
+      <td>76.291700</td>
+      <td>152.5834</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>1</td>
+      <td>0</td>
+      <td>Beattie, Mr. Thomson</td>
+      <td>male</td>
+      <td>36.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13050</td>
+      <td>75.2417</td>
+      <td>C6</td>
+      <td>C</td>
+      <td>A</td>
+      <td>NaN</td>
+      <td>Winnipeg, MN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>36.0000</td>
+      <td>46.0</td>
+      <td>41.000000</td>
+      <td>82.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>75.2417</td>
+      <td>75.2417</td>
+      <td>75.241700</td>
+      <td>150.4834</td>
+      <td>292.0</td>
+      <td>292.0</td>
+      <td>292.0</td>
+      <td>292.0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>1</td>
+      <td>0</td>
+      <td>McCaffry, Mr. Thomas Francis</td>
+      <td>male</td>
+      <td>46.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13050</td>
+      <td>75.2417</td>
+      <td>C6</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>292.0</td>
+      <td>Vancouver, BC</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>36.0000</td>
+      <td>46.0</td>
+      <td>41.000000</td>
+      <td>82.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>75.2417</td>
+      <td>75.2417</td>
+      <td>75.241700</td>
+      <td>150.4834</td>
+      <td>292.0</td>
+      <td>292.0</td>
+      <td>292.0</td>
+      <td>292.0</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Beckwith, Mr. Richard Leonard</td>
+      <td>male</td>
+      <td>37.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>11751</td>
+      <td>52.5542</td>
+      <td>D35</td>
+      <td>S</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>37.0000</td>
+      <td>47.0</td>
+      <td>42.000000</td>
+      <td>84.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>52.5542</td>
+      <td>52.5542</td>
+      <td>52.554200</td>
+      <td>105.1084</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Beckwith, Mrs. Richard Leonard (Sallie Monypeny)</td>
+      <td>female</td>
+      <td>47.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>11751</td>
+      <td>52.5542</td>
+      <td>D35</td>
+      <td>S</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>37.0000</td>
+      <td>47.0</td>
+      <td>42.000000</td>
+      <td>84.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>52.5542</td>
+      <td>52.5542</td>
+      <td>52.554200</td>
+      <td>105.1084</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Behr, Mr. Karl Howell</td>
+      <td>male</td>
+      <td>26.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>111369</td>
+      <td>30.0000</td>
+      <td>C148</td>
+      <td>C</td>
+      <td>5</td>
+      <td>NaN</td>
+      <td>New York, NY</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>26.0000</td>
+      <td>26.0</td>
+      <td>26.000000</td>
+      <td>26.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>30.0000</td>
+      <td>30.0000</td>
+      <td>30.000000</td>
+      <td>30.0000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bird, Miss. Ellen</td>
+      <td>female</td>
+      <td>29.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17483</td>
+      <td>221.7792</td>
+      <td>C97</td>
+      <td>S</td>
+      <td>8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>29.0000</td>
+      <td>29.0</td>
+      <td>29.000000</td>
+      <td>29.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>221.7792</td>
+      <td>221.7792</td>
+      <td>221.779200</td>
+      <td>221.7792</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bishop, Mr. Dickinson H</td>
+      <td>male</td>
+      <td>25.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>11967</td>
+      <td>91.0792</td>
+      <td>B49</td>
+      <td>C</td>
+      <td>7</td>
+      <td>NaN</td>
+      <td>Dowagiac, MI</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>19.0000</td>
+      <td>25.0</td>
+      <td>22.000000</td>
+      <td>44.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>91.0792</td>
+      <td>91.0792</td>
+      <td>91.079200</td>
+      <td>182.1584</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>1</td>
+      <td>1</td>
+      <td>Bishop, Mrs. Dickinson H (Helen Walton)</td>
+      <td>female</td>
+      <td>19.0000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>11967</td>
+      <td>91.0792</td>
+      <td>B49</td>
+      <td>C</td>
+      <td>7</td>
+      <td>NaN</td>
+      <td>Dowagiac, MI</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>19.0000</td>
+      <td>25.0</td>
+      <td>22.000000</td>
+      <td>44.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>91.0792</td>
+      <td>91.0792</td>
+      <td>91.079200</td>
+      <td>182.1584</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>265</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Brown, Miss. Amelia "Mildred"</td>
+      <td>female</td>
+      <td>24.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>248733</td>
+      <td>13.0000</td>
+      <td>F33</td>
+      <td>S</td>
+      <td>11</td>
+      <td>NaN</td>
+      <td>London / Montreal, PQ</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>22.0000</td>
+      <td>34.0</td>
+      <td>27.250000</td>
+      <td>109.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>13.0000</td>
+      <td>11.125000</td>
+      <td>44.5000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>266</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Cook, Mrs. (Selena Rogers)</td>
+      <td>female</td>
+      <td>22.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>W./C. 14266</td>
+      <td>10.5000</td>
+      <td>F33</td>
+      <td>S</td>
+      <td>14</td>
+      <td>NaN</td>
+      <td>Pennsylvania</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>22.0000</td>
+      <td>34.0</td>
+      <td>27.250000</td>
+      <td>109.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>13.0000</td>
+      <td>11.125000</td>
+      <td>44.5000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>267</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Lemore, Mrs. (Amelia Milley)</td>
+      <td>female</td>
+      <td>34.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>C.A. 34260</td>
+      <td>10.5000</td>
+      <td>F33</td>
+      <td>S</td>
+      <td>14</td>
+      <td>NaN</td>
+      <td>Chicago, IL</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>22.0000</td>
+      <td>34.0</td>
+      <td>27.250000</td>
+      <td>109.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>13.0000</td>
+      <td>11.125000</td>
+      <td>44.5000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>268</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Nye, Mrs. (Elizabeth Ramell)</td>
+      <td>female</td>
+      <td>29.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>C.A. 29395</td>
+      <td>10.5000</td>
+      <td>F33</td>
+      <td>S</td>
+      <td>11</td>
+      <td>NaN</td>
+      <td>Folkstone, Kent / New York, NY</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>4</td>
+      <td>22.0000</td>
+      <td>34.0</td>
+      <td>27.250000</td>
+      <td>109.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>13.0000</td>
+      <td>11.125000</td>
+      <td>44.5000</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>269</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Keane, Miss. Nora A</td>
+      <td>female</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>226593</td>
+      <td>12.3500</td>
+      <td>E101</td>
+      <td>Q</td>
+      <td>10</td>
+      <td>NaN</td>
+      <td>Harrisburg, PA</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>3</td>
+      <td>27.0000</td>
+      <td>32.5</td>
+      <td>29.750000</td>
+      <td>59.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>13.0000</td>
+      <td>11.950000</td>
+      <td>35.8500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>270</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Troutt, Miss. Edwina Celia "Winnie"</td>
+      <td>female</td>
+      <td>27.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>34218</td>
+      <td>10.5000</td>
+      <td>E101</td>
+      <td>S</td>
+      <td>16</td>
+      <td>NaN</td>
+      <td>Bath, England / Massachusetts</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>3</td>
+      <td>27.0000</td>
+      <td>32.5</td>
+      <td>29.750000</td>
+      <td>59.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>13.0000</td>
+      <td>11.950000</td>
+      <td>35.8500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>271</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Webber, Miss. Susan</td>
+      <td>female</td>
+      <td>32.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>27267</td>
+      <td>13.0000</td>
+      <td>E101</td>
+      <td>S</td>
+      <td>12</td>
+      <td>NaN</td>
+      <td>England / Hartford, CT</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>3</td>
+      <td>27.0000</td>
+      <td>32.5</td>
+      <td>29.750000</td>
+      <td>59.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>13.0000</td>
+      <td>11.950000</td>
+      <td>35.8500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>272</th>
+      <td>2</td>
+      <td>0</td>
+      <td>Mack, Mrs. (Mary)</td>
+      <td>female</td>
+      <td>57.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>S.O./P.P. 3</td>
+      <td>10.5000</td>
+      <td>E77</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>52.0</td>
+      <td>Southampton / New York, NY</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>57.0000</td>
+      <td>57.0</td>
+      <td>57.000000</td>
+      <td>57.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>10.5000</td>
+      <td>10.5000</td>
+      <td>10.500000</td>
+      <td>10.5000</td>
+      <td>52.0</td>
+      <td>52.0</td>
+      <td>52.0</td>
+      <td>52.0</td>
+    </tr>
+    <tr>
+      <th>273</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Navratil, Master. Edmond Roger</td>
+      <td>male</td>
+      <td>2.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>230080</td>
+      <td>26.0000</td>
+      <td>F2</td>
+      <td>S</td>
+      <td>D</td>
+      <td>NaN</td>
+      <td>Nice, France</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>2.0000</td>
+      <td>36.5</td>
+      <td>16.875000</td>
+      <td>67.5000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>4</td>
+      <td>13.0000</td>
+      <td>26.0000</td>
+      <td>22.750000</td>
+      <td>91.0000</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>274</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Navratil, Master. Michel M</td>
+      <td>male</td>
+      <td>3.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>230080</td>
+      <td>26.0000</td>
+      <td>F2</td>
+      <td>S</td>
+      <td>D</td>
+      <td>NaN</td>
+      <td>Nice, France</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>2.0000</td>
+      <td>36.5</td>
+      <td>16.875000</td>
+      <td>67.5000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>4</td>
+      <td>13.0000</td>
+      <td>26.0000</td>
+      <td>22.750000</td>
+      <td>91.0000</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>275</th>
+      <td>2</td>
+      <td>0</td>
+      <td>Navratil, Mr. Michel ("Louis M Hoffman")</td>
+      <td>male</td>
+      <td>36.5000</td>
+      <td>0</td>
+      <td>2</td>
+      <td>230080</td>
+      <td>26.0000</td>
+      <td>F2</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>15.0</td>
+      <td>Nice, France</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>2.0000</td>
+      <td>36.5</td>
+      <td>16.875000</td>
+      <td>67.5000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>4</td>
+      <td>13.0000</td>
+      <td>26.0000</td>
+      <td>22.750000</td>
+      <td>91.0000</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>276</th>
+      <td>2</td>
+      <td>0</td>
+      <td>Nesson, Mr. Israel</td>
+      <td>male</td>
+      <td>26.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>244368</td>
+      <td>13.0000</td>
+      <td>F2</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Boston, MA</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>2.0000</td>
+      <td>36.5</td>
+      <td>16.875000</td>
+      <td>67.5000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1.0</td>
+      <td>4</td>
+      <td>13.0000</td>
+      <td>26.0000</td>
+      <td>22.750000</td>
+      <td>91.0000</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+      <td>15.0</td>
+    </tr>
+    <tr>
+      <th>277</th>
+      <td>2</td>
+      <td>1</td>
+      <td>Nourney, Mr. Alfred ("Baron von Drachstedt")</td>
+      <td>male</td>
+      <td>20.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SC/PARIS 2166</td>
+      <td>13.8625</td>
+      <td>D38</td>
+      <td>C</td>
+      <td>7</td>
+      <td>NaN</td>
+      <td>Cologne, Germany</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>20.0000</td>
+      <td>20.0</td>
+      <td>20.000000</td>
+      <td>20.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>13.8625</td>
+      <td>13.8625</td>
+      <td>13.862500</td>
+      <td>13.8625</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>278</th>
+      <td>2</td>
+      <td>0</td>
+      <td>Swane, Mr. George</td>
+      <td>male</td>
+      <td>18.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>248734</td>
+      <td>13.0000</td>
+      <td>F</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>294.0</td>
+      <td>NaN</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>18.5000</td>
+      <td>18.5</td>
+      <td>18.500000</td>
+      <td>18.5000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>13.0000</td>
+      <td>13.0000</td>
+      <td>13.000000</td>
+      <td>13.0000</td>
+      <td>294.0</td>
+      <td>294.0</td>
+      <td>294.0</td>
+      <td>294.0</td>
+    </tr>
+    <tr>
+      <th>279</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Abelseth, Mr. Olaus Jorgensen</td>
+      <td>male</td>
+      <td>25.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>348122</td>
+      <td>7.6500</td>
+      <td>F G63</td>
+      <td>S</td>
+      <td>A</td>
+      <td>NaN</td>
+      <td>Perkins County, SD</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>1</td>
+      <td>25.0000</td>
+      <td>42.0</td>
+      <td>33.500000</td>
+      <td>67.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>7.6500</td>
+      <td>7.6500</td>
+      <td>7.650000</td>
+      <td>15.3000</td>
+      <td>120.0</td>
+      <td>120.0</td>
+      <td>120.0</td>
+      <td>120.0</td>
+    </tr>
+    <tr>
+      <th>280</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Humblen, Mr. Adolf Mathias Nicolai Olsen</td>
+      <td>male</td>
+      <td>42.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>348121</td>
+      <td>7.6500</td>
+      <td>F G63</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>120.0</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.500000</td>
+      <td>1</td>
+      <td>25.0000</td>
+      <td>42.0</td>
+      <td>33.500000</td>
+      <td>67.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>7.6500</td>
+      <td>7.6500</td>
+      <td>7.650000</td>
+      <td>15.3000</td>
+      <td>120.0</td>
+      <td>120.0</td>
+      <td>120.0</td>
+      <td>120.0</td>
+    </tr>
+    <tr>
+      <th>281</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Krekorian, Mr. Neshan</td>
+      <td>male</td>
+      <td>25.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2654</td>
+      <td>7.2292</td>
+      <td>F E57</td>
+      <td>C</td>
+      <td>10</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>25.0000</td>
+      <td>25.0</td>
+      <td>25.000000</td>
+      <td>25.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>7.2292</td>
+      <td>7.2292</td>
+      <td>7.229200</td>
+      <td>7.2292</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>282</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Mardirosian, Mr. Sarkis</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2655</td>
+      <td>7.2292</td>
+      <td>F E46</td>
+      <td>C</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>7.2292</td>
+      <td>7.2292</td>
+      <td>7.229200</td>
+      <td>7.2292</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>283</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Moen, Mr. Sigurd Hansen</td>
+      <td>male</td>
+      <td>25.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>348123</td>
+      <td>7.6500</td>
+      <td>F G73</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>309.0</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>19.0000</td>
+      <td>25.0</td>
+      <td>22.000000</td>
+      <td>44.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>7.6500</td>
+      <td>7.6500</td>
+      <td>7.650000</td>
+      <td>15.3000</td>
+      <td>309.0</td>
+      <td>309.0</td>
+      <td>309.0</td>
+      <td>309.0</td>
+    </tr>
+    <tr>
+      <th>284</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Soholt, Mr. Peter Andreas Lauritz Andersen</td>
+      <td>male</td>
+      <td>19.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>348124</td>
+      <td>7.6500</td>
+      <td>F G73</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>19.0000</td>
+      <td>25.0</td>
+      <td>22.000000</td>
+      <td>44.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>7.6500</td>
+      <td>7.6500</td>
+      <td>7.650000</td>
+      <td>15.3000</td>
+      <td>309.0</td>
+      <td>309.0</td>
+      <td>309.0</td>
+      <td>309.0</td>
+    </tr>
+    <tr>
+      <th>285</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Moor, Master. Meier</td>
+      <td>male</td>
+      <td>6.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>392096</td>
+      <td>12.4750</td>
+      <td>E121</td>
+      <td>S</td>
+      <td>14</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>6.0000</td>
+      <td>27.0</td>
+      <td>16.500000</td>
+      <td>33.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>12.4750</td>
+      <td>12.4750</td>
+      <td>12.475000</td>
+      <td>24.9500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>286</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Moor, Mrs. (Beila)</td>
+      <td>female</td>
+      <td>27.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>392096</td>
+      <td>12.4750</td>
+      <td>E121</td>
+      <td>S</td>
+      <td>14</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>2</td>
+      <td>6.0000</td>
+      <td>27.0</td>
+      <td>16.500000</td>
+      <td>33.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>2</td>
+      <td>12.4750</td>
+      <td>12.4750</td>
+      <td>12.475000</td>
+      <td>24.9500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>287</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Peter, Miss. Anna</td>
+      <td>female</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2668</td>
+      <td>22.3583</td>
+      <td>F E69</td>
+      <td>C</td>
+      <td>D</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1</td>
+      <td>22.3583</td>
+      <td>22.3583</td>
+      <td>22.358300</td>
+      <td>22.3583</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>288</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Pickard, Mr. Berk (Berk Trembisky)</td>
+      <td>male</td>
+      <td>32.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SOTON/O.Q. 392078</td>
+      <td>8.0500</td>
+      <td>E10</td>
+      <td>S</td>
+      <td>9</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.000000</td>
+      <td>1</td>
+      <td>32.0000</td>
+      <td>32.0</td>
+      <td>32.000000</td>
+      <td>32.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>8.0500</td>
+      <td>8.0500</td>
+      <td>8.050000</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>289</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Sandstrom, Miss. Beatrice Irene</td>
+      <td>female</td>
+      <td>1.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>PP 9549</td>
+      <td>16.7000</td>
+      <td>G6</td>
+      <td>S</td>
+      <td>13</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>15</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1.0000</td>
+      <td>29.0</td>
+      <td>12.000000</td>
+      <td>60.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1.2</td>
+      <td>6</td>
+      <td>10.4625</td>
+      <td>16.7000</td>
+      <td>14.205000</td>
+      <td>71.0250</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>290</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Sandstrom, Mrs. Hjalmar (Agnes Charlotta Bengt...</td>
+      <td>female</td>
+      <td>24.0000</td>
+      <td>0</td>
+      <td>2</td>
+      <td>PP 9549</td>
+      <td>16.7000</td>
+      <td>G6</td>
+      <td>S</td>
+      <td>13</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>15</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1.0000</td>
+      <td>29.0</td>
+      <td>12.000000</td>
+      <td>60.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1.2</td>
+      <td>6</td>
+      <td>10.4625</td>
+      <td>16.7000</td>
+      <td>14.205000</td>
+      <td>71.0250</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>291</th>
+      <td>3</td>
+      <td>1</td>
+      <td>Sandstrom, Miss. Marguerite Rut</td>
+      <td>female</td>
+      <td>4.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>PP 9549</td>
+      <td>16.7000</td>
+      <td>G6</td>
+      <td>S</td>
+      <td>13</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>15</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1.0000</td>
+      <td>29.0</td>
+      <td>12.000000</td>
+      <td>60.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1.2</td>
+      <td>6</td>
+      <td>10.4625</td>
+      <td>16.7000</td>
+      <td>14.205000</td>
+      <td>71.0250</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>292</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Strom, Miss. Telma Matilda</td>
+      <td>female</td>
+      <td>2.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>347054</td>
+      <td>10.4625</td>
+      <td>G6</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>15</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1.0000</td>
+      <td>29.0</td>
+      <td>12.000000</td>
+      <td>60.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1.2</td>
+      <td>6</td>
+      <td>10.4625</td>
+      <td>16.7000</td>
+      <td>14.205000</td>
+      <td>71.0250</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>293</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Strom, Mrs. Wilhelm (Elna Matilda Persson)</td>
+      <td>female</td>
+      <td>29.0000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>347054</td>
+      <td>10.4625</td>
+      <td>G6</td>
+      <td>S</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>15</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1.0000</td>
+      <td>29.0</td>
+      <td>12.000000</td>
+      <td>60.0000</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0.600000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1.2</td>
+      <td>6</td>
+      <td>10.4625</td>
+      <td>16.7000</td>
+      <td>14.205000</td>
+      <td>71.0250</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>294</th>
+      <td>3</td>
+      <td>0</td>
+      <td>Tobin, Mr. Roger</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>383121</td>
+      <td>7.7500</td>
+      <td>F38</td>
+      <td>Q</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0</td>
+      <td>7.7500</td>
+      <td>7.7500</td>
+      <td>7.750000</td>
+      <td>7.7500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>295 rows × 42 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="deep-diver/pocket-ml-reference-korean"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/pocket-ml-reference-korean/chapter7/" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/pocket-ml-reference-korean/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/pocket-ml-reference-korean/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/pocket-ml-reference-korean/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>주머니속의 머신러닝 한글 번역본 웹 사이트로, 본문에 수록된 소스코드를 블로그 형태로 열람하거나 Colab에서 실행할 수 있는 링크를 제공합니다.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" title="fastai"><svg class="svg-icon grey"><use xlink:href="/pocket-ml-reference-korean/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/pocket-ml-reference-korean/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

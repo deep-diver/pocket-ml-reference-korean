@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>9장 불균형 범주의 문제 | 주머니속의 머신러닝</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="9장 불균형 범주의 문제" />
+<meta name="author" content="Chansung Park" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="불균형 범주의 문제를 다룹니다." />
+<meta property="og:description" content="불균형 범주의 문제를 다룹니다." />
+<link rel="canonical" href="https://deep-diver.github.io/pocket-ml-reference-korean/chapter9/" />
+<meta property="og:url" content="https://deep-diver.github.io/pocket-ml-reference-korean/chapter9/" />
+<meta property="og:site_name" content="주머니속의 머신러닝" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-03-07T00:00:00-06:00" />
+<script type="application/ld+json">
+{"url":"https://deep-diver.github.io/pocket-ml-reference-korean/chapter9/","@type":"BlogPosting","headline":"9장 불균형 범주의 문제","dateModified":"2021-03-07T00:00:00-06:00","datePublished":"2021-03-07T00:00:00-06:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://deep-diver.github.io/pocket-ml-reference-korean/chapter9/"},"author":{"@type":"Person","name":"Chansung Park"},"description":"불균형 범주의 문제를 다룹니다.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/pocket-ml-reference-korean/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://deep-diver.github.io/pocket-ml-reference-korean/feed.xml" title="주머니속의 머신러닝" /><link rel="shortcut icon" type="image/x-icon" href="/pocket-ml-reference-korean/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/pocket-ml-reference-korean/">주머니속의 머신러닝</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/pocket-ml-reference-korean/about/">About Me</a><a class="page-link" href="/pocket-ml-reference-korean/search/">Search</a><a class="page-link" href="/pocket-ml-reference-korean/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">9장 불균형 범주의 문제</h1><p class="page-description">불균형 범주의 문제를 다룹니다.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-03-07T00:00:00-06:00" itemprop="datePublished">
+        Mar 7, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Chansung Park</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/deep-diver/pocket-ml-reference-korean/tree/master/_notebooks/2021_03_09_ML_Pocket_Chapter9.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/pocket-ml-reference-korean/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/deep-diver/pocket-ml-reference-korean/master?filepath=_notebooks%2F2021_03_09_ML_Pocket_Chapter9.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/pocket-ml-reference-korean/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/deep-diver/pocket-ml-reference-korean/blob/master/_notebooks/2021_03_09_ML_Pocket_Chapter9.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/pocket-ml-reference-korean/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#9.4-소수집단-데이터-업샘플링하기">9.4 소수집단 데이터 업샘플링하기 </a></li>
+<li class="toc-entry toc-h1"><a href="#9.5-과반수집단-데이터를-다운샘플링하기">9.5 과반수집단 데이터를 다운샘플링하기 </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021_03_09_ML_Pocket_Chapter9.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="9.4-소수집단-데이터-업샘플링하기">
+<a class="anchor" href="#9.4-%EC%86%8C%EC%88%98%EC%A7%91%EB%8B%A8-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%97%85%EC%83%98%ED%94%8C%EB%A7%81%ED%95%98%EA%B8%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>9.4 소수집단 데이터 업샘플링하기<a class="anchor-link" href="#9.4-%EC%86%8C%EC%88%98%EC%A7%91%EB%8B%A8-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%97%85%EC%83%98%ED%94%8C%EB%A7%81%ED%95%98%EA%B8%B0"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">resample</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">survived</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="n">surv_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">death_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>
+
+<span class="n">df_upsample</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span>
+  <span class="n">surv_df</span><span class="p">,</span>
+  <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+  <span class="n">n_samples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">death_df</span><span class="p">),</span>
+  <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">death_df</span><span class="p">,</span> <span class="n">df_upsample</span><span class="p">])</span>
+<span class="n">df2</span><span class="o">.</span><span class="n">survived</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1    809
+0    809
+Name: survived, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">imblearn.over_sampling</span> <span class="kn">import</span> <span class="p">(</span>
+  <span class="n">RandomOverSampler</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ros</span> <span class="o">=</span> <span class="n">RandomOverSampler</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">X_ros</span><span class="p">,</span> <span class="n">y_ros</span> <span class="o">=</span> <span class="n">ros</span><span class="o">.</span><span class="n">fit_sample</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">y_ros</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1    809
+0    809
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="9.5-과반수집단-데이터를-다운샘플링하기">
+<a class="anchor" href="#9.5-%EA%B3%BC%EB%B0%98%EC%88%98%EC%A7%91%EB%8B%A8-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC-%EB%8B%A4%EC%9A%B4%EC%83%98%ED%94%8C%EB%A7%81%ED%95%98%EA%B8%B0" aria-hidden="true"><span class="octicon octicon-link"></span></a>9.5 과반수집단 데이터를 다운샘플링하기<a class="anchor-link" href="#9.5-%EA%B3%BC%EB%B0%98%EC%88%98%EC%A7%91%EB%8B%A8-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%A5%BC-%EB%8B%A4%EC%9A%B4%EC%83%98%ED%94%8C%EB%A7%81%ED%95%98%EA%B8%B0"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">resample</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">survived</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="n">surv_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">death_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="o">~</span><span class="n">mask</span><span class="p">]</span>
+
+<span class="n">df_downsample</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span>
+  <span class="n">death_df</span><span class="p">,</span>
+  <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+  <span class="n">n_samples</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">surv_df</span><span class="p">),</span>
+  <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">surv_df</span><span class="p">,</span> <span class="n">df_downsample</span><span class="p">])</span>
+<span class="n">df3</span><span class="o">.</span><span class="n">survived</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>1    500
+0    500
+Name: survived, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="deep-diver/pocket-ml-reference-korean"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/pocket-ml-reference-korean/chapter9/" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/pocket-ml-reference-korean/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/pocket-ml-reference-korean/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/pocket-ml-reference-korean/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>주머니속의 머신러닝 한글 번역본 웹 사이트로, 본문에 수록된 소스코드를 블로그 형태로 열람하거나 Colab에서 실행할 수 있는 링크를 제공합니다.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/fastai" title="fastai"><svg class="svg-icon grey"><use xlink:href="/pocket-ml-reference-korean/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/fastdotai" title="fastdotai"><svg class="svg-icon grey"><use xlink:href="/pocket-ml-reference-korean/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
