@@ -1,0 +1,27 @@
+$high-emph: rgba(white, 0.87); // Colour 1 -> White
+$med-emph: rgba(white, 0.69); //Noice
+$low-emph: rgba(white, 0.38);
+$dark-grey : #121212; // Colour 2
+$overlay: mix($dark-grey, white, 95%);
+$overlay-light: mix($dark-grey, white, 86%);
+
+* {
+    scrollbar-color: $dark-grey $overlay-light;
+}
+
+canvas {
+    filter: invert(100%);
+}
+
+table th {
+    background-color: $overlay;
+    border-color: $overlay-light;
+    color: $high-emph;
+}
+
+table td {
+    background-color: $dark-grey;
+    border-color: $overlay-light;
+    color: $med-emph;
+}
+
